@@ -18,19 +18,22 @@ def compute_sm_dot(X, Y):
 
 def plot_feature_ssm(X, Fs_X, S, Fs_S, duration, color_ann=None,
                      title='', label='Time (seconds)', time=True,
-                     figsize=(5, 6), fontsize=10, clim_X=None, clim=None):
-    cmap = matplotlib.colormaps['viridis']  # libfmp.b.compressed_gray_cmap(alpha=-10)
-    fig, ax = plt.subplots(2, 2, gridspec_kw={'width_ratios': [1, 0.05],
+                     figsize=(5, 5), fontsize=10, clim_X=None, clim=None):
+    cmap = matplotlib.colormaps['viridis']
+    #fig, ax = plt.subplots(2, 2, gridspec_kw={'width_ratios': [1, 0.05],
+    #                                          'wspace': 0.2,
+    #                                          'height_ratios': [0.3, 1]},
+    #                       figsize=figsize)
+    #libfmp.b.plot_matrix(X, Fs=Fs_X, ax=[ax[0, 0], ax[0, 1]], cmap=cmap, clim=clim_X,
+    #                     xlabel='', ylabel='', title=title)
+    fig, ax = plt.subplots(1, 2, gridspec_kw={'width_ratios': [1, 0.05],
                                               'wspace': 0.2,
-                                              'height_ratios': [0.3, 1]},
-                           figsize=figsize)
-    libfmp.b.plot_matrix(X, Fs=Fs_X, ax=[ax[0, 0], ax[0, 1]], cmap=cmap, clim=clim_X,
-                         xlabel='', ylabel='', title=title)
-
-    libfmp.b.plot_matrix(S, Fs=Fs_S, ax=[ax[1, 0], ax[1, 1]], cmap=cmap, clim=clim,
-                         title='', xlabel=label, ylabel='', colorbar=True)
-    ax[0, 1].set_xticks([])
-    ax[0, 1].set_yticks([])
+                                              'height_ratios': [1]},
+                                              figsize=figsize)
+    libfmp.b.plot_matrix(S, Fs=Fs_S, ax=[ax[0], ax[1]], cmap=cmap, clim=clim,
+                         title=title, xlabel=label, ylabel='', colorbar=True)
+    #ax[0, 1].set_xticks([])
+    #ax[0, 1].set_yticks([])
 
     return fig, ax
 
@@ -99,6 +102,6 @@ Fs_X = Fs_nov / H
 # X, Fs_X = libfmp.c3.smooth_downsample_feature_sequence(tempogram, Fs / H)
 X = normalize_feature_sequence(tempogram, norm='2', threshold=0.001)
 S = compute_sm_dot(X, X)
-fig, ax = plot_feature_ssm(X, 1, S, 1, x_duration * Fs_X, title='Tempogram (Fs=%0.2f)' % Fs_X,
+fig, ax = plot_feature_ssm(X, 1, S, 1, x_duration * Fs_X, title='SSM for Tempogram',# 'Tempogram (Fs=%0.2f)' % Fs_X,
                            label='Time (frames)')
 plt.show()

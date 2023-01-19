@@ -1,3 +1,4 @@
+from libfmp.b import FloatingBox
 import numpy as np
 import os, sys, librosa
 from scipy import signal
@@ -8,7 +9,6 @@ import libfmp.c2
 import libfmp.c3
 import libfmp.c4
 import libfmp.c6
-
 
 def compute_sm_dot(X, Y):
     """Computes similarty matrix from feature sequences using dot (inner) product
@@ -24,7 +24,6 @@ def compute_sm_dot(X, Y):
     """
     S = np.dot(np.transpose(X), Y)
     return S
-
 
 def plot_feature_ssm(X, Fs_X, S, Fs_S, duration, color_ann=None,
                      title='', label='Time (seconds)', time=True,
@@ -48,25 +47,33 @@ def plot_feature_ssm(X, Fs_X, S, Fs_S, duration, color_ann=None,
     return fig, ax
 
 
-# Waveform
-x_duration = 120
+float_box = libfmp.b.FloatingBox()
+
+# MFCC-based feature sequence
+x_duration=120
 y, Fs = librosa.load('../songs/Duvet.mp3', duration=x_duration)
-
-# Chroma Feature Sequence
 N, H = 4096, 512
-chromagram = librosa.feature.chroma_stft(y=y, sr=Fs, tuning=0, norm=2, hop_length=H, n_fft=N)
-X, Fs_X = libfmp.c3.smooth_downsample_feature_sequence(chromagram, Fs / H, filt_len=41, down_sampling=10)
-
-# Annotation
-# filename = 'FMP_C4_Audio_Brahms_HungarianDances-05_Ormandy.csv'
-# fn_ann = os.path.join('..', 'data', 'C4', filename)
-# ann, color_ann = libfmp.c4.read_structure_annotation(fn_ann, fn_ann_color=filename)
-# ann_frames = libfmp.c4.convert_structure_annotation(ann, Fs=Fs_X)
-
-# SSM
+X_MFCC = librosa.feature.mfcc(y=y, sr=Fs, hop_length=H, n_fft=N)
+'''coef = np.arange(0,20)
+X_MFCC_upper = X_MFCC[coef,:]
+X, Fs_X = libfmp.c3.smooth_downsample_feature_sequence(X_MFCC_upper, Fs/H, filt_len=41, down_sampling=10)
 X = libfmp.c3.normalize_feature_sequence(X, norm='2', threshold=0.001)
-S = compute_sm_dot(X, X)
-fig, ax = plot_feature_ssm(X, 1, S, 1, x_duration,
-                           clim_X=[0, 1], clim=[0, 1], label='Time (frames)',
-                           title='SSM for Chroma Feature')
+S = compute_sm_dot(X,X)
+
+fig, ax = plot_feature_ssm(X, 1, S, 1, x_duration*Fs_X,
+    title='SSM for MFCC  (20 coefficients)', label='Time (frames)')'''
+#float_box.add_fig(fig)
+
+
+# MFCC-based feature sequence only using coefficients 4 to 14
+coef = np.arange(4,15)
+X_MFCC_upper = X_MFCC[coef,:]
+X, Fs_X = libfmp.c3.smooth_downsample_feature_sequence(X_MFCC_upper, Fs/H, filt_len=41, down_sampling=10)
+X = libfmp.c3.normalize_feature_sequence(X, norm='2', threshold=0.001)
+S = compute_sm_dot(X,X)
+fig, ax = plot_feature_ssm(X, 1, S, 1, x_duration*Fs_X, label='Time (frames)',
+                           title='SSM for MFCC (coefficients 4 to 14)')
+#float_box.add_fig(fig)
+
+#float_box.show()
 plt.show()
