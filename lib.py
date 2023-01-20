@@ -3,8 +3,52 @@ import matplotlib.pyplot as plt
 import librosa.display
 import numpy as np
 import datetime
+import os
+import xlrd
 
 SEGMENT_NUM = 14
+
+def find_all_song_file(database):
+    for root,dirs,files in os.walk(database):
+        for file in files:
+            if file.endswith('.mp3'):
+                fullname_list = os.path.join(file)
+                yield fullname_list
+
+def excel_read(excel, sheet_num):
+
+    result = {}
+
+    workbook = xlrd.open_workbook(excel)
+    table = workbook.sheet_by_index(sheet_num)
+
+    for i in range(table.nrows):
+        
+        song_segment = []
+        song_name = ''
+
+        for j in range(table.ncols):
+
+            # song name
+            if j == 0:
+                song_name = table.cell(i,j).value
+                continue
+
+            if table.cell(i,j).value == '':
+                break
+            
+            data = table.cell(i,j).value
+
+            if j % 2 == 0:
+                data = float(table.cell(i,j).value)
+                data = round(data *24 *60)
+
+            song_segment.append(data)
+
+        result[song_name] = song_segment
+
+    return result
+
 
 def cal_collerate(onsetS):
     # 8 seconds = 344   2 seconds = 86  10 seconds = 430  7.5 seconds = 322
