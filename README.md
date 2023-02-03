@@ -1,4 +1,4 @@
 # Music_segment
 
-Consider the copyright issue, we didn't upload our song database.
+Considering the copyright issue, we didn't upload our audio file database. The manual segment timestamp are in SMT_v2.xls.
 
