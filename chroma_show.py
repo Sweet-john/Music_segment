@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import matplotlib.pyplot as plt
 import librosa
 import librosa.display
@@ -18,3 +19,25 @@ plt.figure(figsize=(20, 5))
 librosa.display.specshow(X, sr=sample_rate, x_axis='time', y_axis='chroma')
 plt.colorbar()
 plt.show()
+=======
+import matplotlib.pyplot as plt
+import librosa
+import librosa.display
+import numpy as np
+
+#file path
+audio_data = 'SMT_dataset/CH/热爱105度的你.mp3'
+
+
+x , sample_rate = librosa.load(audio_data)
+print(x.shape, sample_rate)
+print (librosa.get_duration(x))
+
+#X = librosa.feature.chroma_cqt(y=x, sr=sample_rate)
+X = librosa.feature.chroma_stft(y=x, sr=sample_rate)
+print(X.shape)
+plt.figure(figsize=(10, 5))
+librosa.display.specshow(X, sr=sample_rate, x_axis='time', y_axis='chroma')
+plt.colorbar()
+plt.show()
+>>>>>>> Stashed changes

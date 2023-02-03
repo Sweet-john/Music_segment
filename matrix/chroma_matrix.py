@@ -50,7 +50,7 @@ def plot_feature_ssm(X, Fs_X, S, Fs_S, duration, color_ann=None,
 
 # Waveform
 x_duration = 120
-y, Fs = librosa.load('../songs/Duvet.mp3', duration=x_duration)
+y, Fs = librosa.load('../SMT_dataset/EN/Phoenix.mp3', duration=x_duration)
 
 # Chroma Feature Sequence
 N, H = 4096, 512

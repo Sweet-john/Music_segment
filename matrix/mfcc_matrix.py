@@ -50,8 +50,13 @@ def plot_feature_ssm(X, Fs_X, S, Fs_S, duration, color_ann=None,
 float_box = libfmp.b.FloatingBox()
 
 # MFCC-based feature sequence
+<<<<<<< Updated upstream
 x_duration=120
 y, Fs = librosa.load('../songs/Duvet.mp3', duration=x_duration)
+=======
+x_duration = 120
+y, Fs = librosa.load('../SMT_dataset/EN/Phoenix.mp3', duration=x_duration)
+>>>>>>> Stashed changes
 N, H = 4096, 512
 X_MFCC = librosa.feature.mfcc(y=y, sr=Fs, hop_length=H, n_fft=N)
 '''coef = np.arange(0,20)
